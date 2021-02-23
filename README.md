@@ -1,14 +1,32 @@
 # PDEsByNNs
-This repository contains three Jupyter notebooks illustrating different approaches to solve partial differential equations (PDEs) by means of neural networks (NNs), which are:
 
-## Dependencies
-All codes are tested with [TensorFlow](https://www.tensorflow.org/) versions `2.3.0` and `2.4.1`.
+This repository contains three Jupyter notebooks illustrating different approaches to solve partial differential equations (PDEs) by means of neural networks (NNs).
+
+The notebooks serve as supplementary material to the paper:
+
+## Three Ways to Solve Partial Differential Equations with Neural Networks - A Review
+
+**Abstract**: Neural networks are increasingly used to construct numerical solution methods for partial differential equations.
+In this expository review, we introduce and contrast three important recent approaches attractive in their simplicity and their suitability for high-dimensional problems: physics-informed neural networks, methods based on the Feynman-Kac formula and the Deep BSDE solver.
+The article is accompanied by a suite of expository software in the form of Jupyter notebooks in which each basic methodology is explained step by step, allowing for a quick assimilation and experimentation.
+An extensive bibliography summarizes the state of the art.
+
+**Keywords**: partial differential equation; Hamilton-Jacobi-Bellman equations; neural networks, curse of dimensionality, Feynman-Kac, backward differential equation, stochastic process
+
+**arXiv preprint**:
+
+
+**Citation**:
+
+**Dependencies**: All codes are tested with [TensorFlow](https://www.tensorflow.org/) versions `2.3.0` and `2.4.1`.
 
 ## [Physics-informed neural networks (PINNs)](https://github.com/janblechschmidt/PDEsByNNs/blob/main/PINN_Solver.ipynb)
 
 <a href="https://colab.research.google.com/github/janblechschmidt/PDEsByNNs/blob/main/PINN_Solver.ipynb" target="_parent">
 <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
+
+<br>
 
 We describe the PINN approach in the notebook [`PINN_Solver.ipynb`](https://github.com/janblechschmidt/PDEsByNNs/blob/main/PINN_Solver.ipynb) for approximating the solution $u:[0,T] \times \mathcal{D} \to \mathbb{R}$ of an evolution equation
 
@@ -35,6 +53,8 @@ PINNs have been proposed in
 <a href="https://colab.research.google.com/github/janblechschmidt/PDEsByNNs/blob/main/Feynman_Kac_Solver.ipynb" target="_parent">
 <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
+
+<br>
 
 In the notebook [`Feynman_Kac_Solver.ipynb`](https://github.com/janblechschmidt/PDEsByNNs/blob/main/Feynman_Kac_Solver.ipynb) we illustrate a PDE solver based on the *Feynman-Kac formula*.
 We consider the solution by neural network methods of a class of partial differential equations which arise as the *backward Kolmogorov equation*, i.e., linear parabolic second-order PDEs in non-divergence form
@@ -70,20 +90,36 @@ This solver has been proposed in
 
 - Beck, Christian, et al. *Solving stochastic differential equations and Kolmogorov equations by means of deep learning*. [arXiv 1806.00421](https://arxiv.org/abs/1806.00421).
 
-## Deep BSDE solver
+## [Deep BSDE solver](https://github.com/janblechschmidt/PDEsByNNs/blob/main/DeepBSDE_Solver.ipynb)
 
+<a href="https://colab.research.google.com/github/janblechschmidt/PDEsByNNs/blob/main/DeepBSDE_Solver.ipynb" target="_parent">
+<img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
-# Paper: Three Ways to Solve Partial Differential Equations with Neural Networks --- A Review
+<br>
 
-## Abstract
-Neural networks are increasingly used to construct numerical solution methods for partial differential equations.
-In this expository review, we introduce and contrast three important recent approaches attractive in their simplicity and their suitability for high-dimensional problems: physics-informed neural networks, methods based on the Feynman-Kac formula and the Deep BSDE solver.
-The article is accompanied by a suite of expository software in the form of Jupyter notebooks in which each basic methodology is explained step by step, allowing for a quick assimilation and experimentation.
-An extensive bibliography summarizes the state of the art.
+In this section we extend the methodology of the [Feynman-Kac solver (GitHub)](https://github.com/janblechschmidt/PDEsByNNs/blob/main/Feynman-Kac_Solver.ipynb) to solving *semilinear* PDEs in the form of the final value problem
 
-**Keywords**: partial differential equation; Hamilton-Jacobi-Bellman equations; neural networks, curse of dimensionality, Feynman-Kac, backward differential equation, stochastic process
+$$
+\begin{aligned}
+   \partial_t u(t,x) 
+   + \frac{1}{2} \sigma \sigma^T(t,x) : \nabla^2 u(t,x) 
+   + \mu(t,x) \cdot \nabla u(t,x) 
+   + f(t,x,u(t,x),\sigma^T(t,x) \nabla u(t,x)) 
+   &= 0, 
+   	\quad &&(t,x) \in [0,T) \times \mathbb R^d,\\
+   u(T,x) &= g(x), \quad &&x \in  \mathbb R^d,
+\end{aligned}
+$$
 
-## arXiv preprint
+with drift $\mu\colon[0,T] \times \mathbb R^d \to \mathbb R^d$, diffusion $\sigma\colon[0,T] \times\mathbb R^d \to \mathbb R^{d \times d}$ and final data $g\colon\mathbb R^d \to \mathbb R$ as before.
+The function $f\colon [0,T] \times \mathbb R^d \times \mathbb R \times \mathbb R^d \to \mathbb R$ containing lower order terms can depend in a general way on the independent variables $t,x$ as well as on the solution $u(t,x)$  and its transformed gradient $(\sigma^T\nabla) u(t,x)$.
 
+The implementation addresses the problem of evaluating the PDE solution at $t=0$ in a fixed spatial point $x$.
+However, the code can be modified to obtain the solution of the PDE at $t=0$ in a domain of interest $\mathcal{D} \subset \mathbb{R}^d$, as described in [Feynman-Kac solver (GitHub)](https://github.com/janblechschmidt/PDEsByNNs/blob/main/Feynman-Kac_Solver.ipynb).
 
-## Citation
+### Literature
+The Deep BSDE solver has been introduced in
+
+- W. E, J. Han and A. Jentzen. *Deep learning-based numerical methods for high-dimensional parabolic partial differential equations and backward stochastic differential equations*. Communications in Mathematics and Statistics, 5, 349–380 (2017), see [published version](https://doi.org/10.1007/s40304-017-0117-6) or [arXiv preprint](https://arxiv.org/abs/1706.04702)
+- J. Han, A. Jentzen and W. E. *Solving high-dimensional partial differential equations using deep learning*. PNAS August 21, 2018 115 (34) 8505-8510, see [published version](https://doi.org/10.1073/pnas.1718942115) or [arXiv preprint](https://arxiv.org/abs/1707.02568).
