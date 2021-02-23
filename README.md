@@ -28,19 +28,7 @@ An extensive bibliography summarizes the state of the art.
 
 <br>
 
-We describe the PINN approach in the notebook [`PINN_Solver.ipynb`](https://github.com/janblechschmidt/PDEsByNNs/blob/main/PINN_Solver.ipynb) for approximating the solution $u:[0,T] \times \mathcal{D} \to \mathbb{R}$ of an evolution equation
-
-$$
-\begin{align}
-    \partial_t u (t,x) + \mathcal{N}[u](t,x) &= 0, && (t,x) \in (0,T] \times \mathcal{D},\\
-    u(0,x) &= u_0(x) \quad && x \in \mathcal{D},
-\end{align}
-$$
-
-where $\mathcal{N}$ is a nonlinear differential operator acting on $u$, 
-$\mathcal{D} \subset \mathbb{R}^d$ a bounded domain,
-$T$ denotes the final time and
-$u_0: \mathcal{D} \to \mathbb{R}$ the prescribed initial data.
+We describe the PINN approach in the notebook [`PINN_Solver.ipynb`](https://github.com/janblechschmidt/PDEsByNNs/blob/main/PINN_Solver.ipynb) for approximating the solution of a **nonlinear evolution equation on a bounded domain** by a neural network.
 
 ### Literature
 PINNs have been proposed in
@@ -57,33 +45,8 @@ PINNs have been proposed in
 <br>
 
 In the notebook [`Feynman_Kac_Solver.ipynb`](https://github.com/janblechschmidt/PDEsByNNs/blob/main/Feynman_Kac_Solver.ipynb) we illustrate a PDE solver based on the *Feynman-Kac formula*.
-We consider the solution by neural network methods of a class of partial differential equations which arise as the *backward Kolmogorov equation*, i.e., linear parabolic second-order PDEs in non-divergence form
-
-$$
-\begin{aligned}
-    \partial_t u(t,x) + \frac{1}{2} \sigma \sigma^T(t,x) : \nabla^2 u(t,x) + \mu(t,x) \cdot \nabla u(t,x) 
-    &= 0, 			\quad && (t,x) \in [0,T) \times \mathbb R^d,\\
-    u(T,x) &= g(x), 	\quad && x \in \mathbb R^d.
-\end{aligned}
-$$
-
-We consider the pure Cauchy problem, allowing the state variable $x$ to vary throughout $\mathbb R^d$, were $d \in \mathbb{N}$ is the spatial dimension, 
-$\nabla u(t,x)$ and $\nabla^2 u(t,x)$ denote the gradient and Hessian of the function $u$, respectively, the colon $:$ denotes the Frobenius inner product of $d \times d$ matrices, i.e., $A:B = \sum_{i,j=1}^d a_{ij} \, b_{ij}$, and the dot $\cdot$ the Euclidean inner product on $\mathbb R^d$.
-We assume the coefficient functions $\mu\colon[0,T] \times \mathbb R^d \to \mathbb R^d$ (drift) and $\sigma\colon[0,T] \times\mathbb R^d \to \mathbb R^{d \times d}$ (diffusion) to be globally Lipschitz continuous.
-Due to the stochastic process connection, the backward Kolmogorov equation is posed as a *final time problem* with data prescribed at time $t=T$ given by a function $g\colon \mathbb R^d \to \mathbb R$.
-The simple change of variables $t \mapsto T - t$ leads to the more familiar initial value form
-
-$$
-\begin{aligned}
-   \partial_t u(t,x) - \frac{1}{2} \sigma \sigma^T(t,x) : \nabla^2 u(t,x) - \mu(t,x) \cdot \nabla u(t,x) 
-   &= 0, 			\quad && (t,x) \in (0,T] \times \mathbb R^d,\\
-   u(0,x) &= g(x), 	\quad && x \in\mathbb R^d.
-\end{aligned}
-$$
-
-Equations in non-divergence form like the backward Kolmogorov equation with  leading term $\sigma \sigma^T(t,x) \colon \nabla^2u(t,x)$ typically arise in the context of stochastic differential equations (SDEs) due to the Itô formula.
-
-The goal of the computations that are carried out in this notebook is to approximate the solution of the PDE at a fixed time $t=0$, i.e., the function $u(0,x)$ where $x$ varies over some $d$-dimensional hypercube $\mathcal{D} := [a,b] \subset \mathbb{R}^d$ with endpoint vectors $a \le b$ (component-wise).
+We consider the solution by neural network methods of a class of partial differential equations which arise as the *backward Kolmogorov equation*, i.e., **linear parabolic second-order PDEs in non-divergence form on an unbounded domain in high spatial dimensions**.
+The goal of the computations that are carried out in this notebook is to approximate the solution of the PDE at a fixed time where the spatial variable varies over some d-dimensional hypercube.
 
 ### Literature
 This solver has been proposed in
@@ -98,25 +61,10 @@ This solver has been proposed in
 
 <br>
 
-In this section we extend the methodology of the [Feynman-Kac solver (GitHub)](https://github.com/janblechschmidt/PDEsByNNs/blob/main/Feynman-Kac_Solver.ipynb) to solving *semilinear* PDEs in the form of the final value problem
+In this section we extend the methodology of the [Feynman-Kac solver (GitHub)](https://github.com/janblechschmidt/PDEsByNNs/blob/main/Feynman-Kac_Solver.ipynb) to solving *semilinear* PDEs where the reaction term contains lower order terms can depend in a general way on the independent variables as well as on the PDE solution and its gradient.
 
-$$
-\begin{aligned}
-   \partial_t u(t,x) 
-   + \frac{1}{2} \sigma \sigma^T(t,x) : \nabla^2 u(t,x) 
-   + \mu(t,x) \cdot \nabla u(t,x) 
-   + f(t,x,u(t,x),\sigma^T(t,x) \nabla u(t,x)) 
-   &= 0, 
-   	\quad &&(t,x) \in [0,T) \times \mathbb R^d,\\
-   u(T,x) &= g(x), \quad &&x \in  \mathbb R^d,
-\end{aligned}
-$$
-
-with drift $\mu\colon[0,T] \times \mathbb R^d \to \mathbb R^d$, diffusion $\sigma\colon[0,T] \times\mathbb R^d \to \mathbb R^{d \times d}$ and final data $g\colon\mathbb R^d \to \mathbb R$ as before.
-The function $f\colon [0,T] \times \mathbb R^d \times \mathbb R \times \mathbb R^d \to \mathbb R$ containing lower order terms can depend in a general way on the independent variables $t,x$ as well as on the solution $u(t,x)$  and its transformed gradient $(\sigma^T\nabla) u(t,x)$.
-
-The implementation addresses the problem of evaluating the PDE solution at $t=0$ in a fixed spatial point $x$.
-However, the code can be modified to obtain the solution of the PDE at $t=0$ in a domain of interest $\mathcal{D} \subset \mathbb{R}^d$, as described in [Feynman-Kac solver (GitHub)](https://github.com/janblechschmidt/PDEsByNNs/blob/main/Feynman-Kac_Solver.ipynb).
+The implementation addresses the problem of evaluating the PDE solution at a fixed point in time and space.
+However, the code can be modified to obtain the solution of the PDE at a fixed time in a domain of interest, as described in the [Feynman-Kac solver (GitHub)](https://github.com/janblechschmidt/PDEsByNNs/blob/main/Feynman-Kac_Solver.ipynb).
 
 ### Literature
 The Deep BSDE solver has been introduced in
