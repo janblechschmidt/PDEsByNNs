@@ -13,10 +13,18 @@ An extensive bibliography summarizes the state of the art.
 
 **Keywords**: partial differential equation; Hamilton-Jacobi-Bellman equations; neural networks, curse of dimensionality, Feynman-Kac, backward differential equation, stochastic process
 
-**arXiv preprint**:
-
+**arXiv preprint**: [https://arxiv.org/abs/2102.11802](https://arxiv.org/abs/2102.11802)
 
 **Citation**:
+
+    @misc{blechschmidt2021ways,
+      title={Three Ways to Solve Partial Differential Equations with Neural Networks --- A Review}, 
+      author={Jan Blechschmidt and Oliver G. Ernst},
+      year={2021},
+      eprint={2102.11802},
+      archivePrefix={arXiv},
+      primaryClass={math.NA}
+    }
 
 **Dependencies**: All codes are tested with [TensorFlow](https://www.tensorflow.org/) versions `2.3.0` and `2.4.1`.
 
